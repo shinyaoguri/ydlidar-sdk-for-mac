@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pyserial = ">=3.5"
+numpy = ">=1.20.0"
+matplotlib = ">=3.3.0"
+
+[dev-packages]
+pytest = "*"
+black = "*"
+flake8 = "*"
+
+[requires]
+python_version = "3"
