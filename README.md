@@ -294,20 +294,10 @@ pipenv update
 pipenv update numpy
 ```
 
-## ライセンス
-
-MIT License
-
 ## 参考
 
 - [YDLiDAR公式SDK](https://github.com/YDLIDAR/YDLidar-SDK)
 - [T-mini Pro製品ページ](https://www.ydlidar.com/products/view/6.html)
 
-## 貢献
-
-バグ報告や機能要望は Issue でお願いします。
-プルリクエストも歓迎します。
-
-## 作者
 
 開発: 2025
