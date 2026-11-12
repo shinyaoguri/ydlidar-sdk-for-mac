@@ -16,6 +16,10 @@ class YDLidarProtocol:
     HEADER_SIZE = 10
     MAX_POINTS_PER_PACKET = 80
 
+    # コマンド（公式SDK準拠）
+    CMD_START_SCAN = bytes([0xA5, 0x60])
+    CMD_STOP_SCAN = bytes([0xA5, 0x65])
+
     # パケットタイプフラグ
     CT_ZERO_POSITION_FLAG = 0x01  # 零位包（回転開始）
 

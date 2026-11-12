@@ -17,6 +17,8 @@ class TMiniDriver:
     # デフォルト設定
     DEFAULT_BAUDRATE = 230400
     DEFAULT_TIMEOUT = 1.0
+    # 停止コマンド送信後、送信中のデータが途切れるまで待つ時間（秒）
+    STOP_SETTLE_TIME = 0.1
 
     def __init__(self,
                  port: str,
@@ -99,6 +101,13 @@ class TMiniDriver:
             print("シリアルポートが接続されていません")
             return
 
+        # センサーは開始コマンドを受けるまで何も送らない。
+        # 前回のスキャンが残っている可能性に備えて一度停止してから開始する
+        self._send_command(YDLidarProtocol.CMD_STOP_SCAN)
+        time.sleep(self.STOP_SETTLE_TIME)
+        self.serial_conn.reset_input_buffer()
+        self._send_command(YDLidarProtocol.CMD_START_SCAN)
+
         self._scan_callback = callback
         self._running = True
         self._thread = threading.Thread(target=self._scan_thread, daemon=True)
@@ -113,7 +122,18 @@ class TMiniDriver:
         self._running = False
         if self._thread:
             self._thread.join(timeout=2.0)
+
+        if self.serial_conn and self.serial_conn.is_open:
+            try:
+                self._send_command(YDLidarProtocol.CMD_STOP_SCAN)
+            except serial.SerialException as e:
+                print(f"停止コマンド送信エラー: {e}")
         print("スキャン停止")
+
+    def _send_command(self, command: bytes):
+        """センサーへコマンドを送信"""
+        self.serial_conn.write(command)
+        self.serial_conn.flush()
 
     def get_scan(self, timeout: float = 1.0) -> Optional[LaserScan]:
         """
